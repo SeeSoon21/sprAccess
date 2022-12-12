@@ -1,0 +1,13 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="MavenPackageUpdate" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="excludeList">
+        <list>
+          <option value="org.springframework.boot:spring-boot-autoconfigure" />
+          <option value="org.springframework:spring-websocket" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>

@@ -1,0 +1,8 @@
+spring:
+  thymeleaf:
+    cache: false
+  datasource:
+    url: jdbc:mysql://localhost:3306/access_migration?serverTimezone=UTC
+    username: dbuser
+    password: 11afamet
+    driver-class-name: com.mysql.cj.jdbc.Driver
