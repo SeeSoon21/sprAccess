@@ -13,4 +13,8 @@ public class Product {
     private long quantity;
     private long expiration_date;
     private Date delivery_date;
+
+    public enum fieldLabel {
+        id, provider_id, department_id, price, quantity, expiration_date, delivery_date
+    }
 }

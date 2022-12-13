@@ -16,4 +16,8 @@ public class Employee {
     private Date birthday;
     private long department_id;
     private long store_id;
+
+    public enum fieldLabel {
+        id, name, surname, patronymic, address, gender, marital_status, birthday, department_id, store_id
+    }
 }

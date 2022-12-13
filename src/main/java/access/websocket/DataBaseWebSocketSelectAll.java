@@ -1,19 +1,16 @@
 package access.websocket;
 
-import access.service.DatabaseRequestService;
 import access.service.DomainSelector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
-import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import com.google.gson.Gson;
 
 import java.util.LinkedList;
 
 
-public class DataBaseWebSocket extends TextWebSocketHandler {
+public class DataBaseWebSocketSelectAll extends TextWebSocketHandler {
     @Autowired
     private DomainSelector selector;
 

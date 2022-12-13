@@ -10,4 +10,8 @@ public class Store {
     private String INN;
     private String address;
     private long director_number;
+
+    public enum fieldLabel {
+        id, name, specialization, INN, address, director_number
+    }
 }

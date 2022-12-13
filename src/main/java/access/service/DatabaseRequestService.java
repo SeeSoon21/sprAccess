@@ -1,9 +1,7 @@
 package access.service;
 
 import access.domain.Contract;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.sql.*;
 import java.util.LinkedList;
@@ -15,7 +13,6 @@ public class DatabaseRequestService {
     private Connection connection;
     private Statement statement = null;
     private PreparedStatement preparedStatement = null;
-    private String sql;
 
     //entity
 
@@ -36,7 +33,7 @@ public class DatabaseRequestService {
 
     public LinkedList<Contract> selectAllContract() {
         System.out.println("Мы в функции selectAllContract");
-        sql = "SELECT * FROM contract;";
+        String sql = "SELECT * FROM contract;";
         LinkedList<Contract> list = new LinkedList<>();
         Contract contract = null;
         ResultSet set = null;
@@ -76,8 +73,53 @@ public class DatabaseRequestService {
         return list;
     }
 
+    /**
+     * определяем объект, выбранный для редактирования юзером
+     * @param className -- класс(сущность)
+     * @param id -- номер записи
+     * @return object -- экземпляр класса, собранный по строке из БД
+     */
+    public Object getSelectById(String className, String id) {
+
+        switch (className) {
+            case "contract" -> { return selectContractRecord(id); }
+
+        }
+
+        return null;
+    }
+
+
+    /**
+     * Возвращает запись таблицы contract по id
+     */
+    public Contract selectContractRecord(String id) {
+        String sql = String.format("SELECT * FROM contract where id = %s;", id);
+        ResultSet set;
+        Contract contract = new Contract();
+
+        if (connection != null) {
+            try {
+                statement = connection.createStatement();
+                set = statement.executeQuery(sql);
+                while(set.next()) {
+                    contract.setId(set.getInt("id"));
+                    contract.setProvider_id(set.getInt("provider_id"));
+                    contract.setStore_id(set.getInt("store_id"));
+                    contract.setDate_contract(set.getDate("date_contract"));
+                }
+
+            } catch (SQLException exc) {
+                exc.printStackTrace();
+            }
+        }
+        System.out.println("CONTRACT: " + contract);
+
+        return contract;
+    }
+
     public void addToContract(long id, long providerId, long storeId, Date date) {
-        sql = "INSERT INTO contract VALUES(?,?,?,?)";
+        String sql = "INSERT INTO contract VALUES(?,?,?,?)";
         if (connection != null) {
             try {
                 preparedStatement = connection.prepareStatement(sql);
