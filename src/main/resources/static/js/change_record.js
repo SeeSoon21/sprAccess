@@ -1,19 +1,21 @@
-ws = new WebSocket("ws://localhost:8080/record")
+ws_change = new WebSocket("ws://localhost:8080/change")
 
-ws.onopen = function() {
-    console.log("соединение установлено: " + window.location.href)
-    //string[2] -- название класса
-    let string = window.location.pathname.split('/');
-    let complete_string = string[2] + ":" + string[3];
-
-    /*let json = {
-        className : string[2],
-        id : string[3]
-    };*/
-
-    ws.send(complete_string);
+ws_change.onopen = function() {
+    console.log("connection(change_record.js)");
 }
 
-ws.onmessage = function () {
+function formSubmitData() {
+    let record_array= Array.from(document.querySelectorAll('input'))
+        .reduce((acc, input) =>
+            ({...acc, [input.id]: input.value }), {});
 
+    console.log("form-data: ")
+    let str = "";
+    for (let key in record_array) {
+        console.log(key + ": " + record_array[key]);
+        str += record_array[key] + ':';
+    }
+
+    ws_change.send(str);
+    //ws.close();
 }

@@ -1,5 +1,6 @@
 package access.config;
 
+import access.websocket.ChangeRecordWebSocket;
 import access.websocket.DataBaseWebSocketSelectAll;
 import access.websocket.SelectConditionDatabaseWebSocket;
 import org.springframework.context.annotation.Bean;
@@ -20,9 +21,13 @@ public class WebSocketConfig implements WebSocketConfigurer {
     @Bean
     public SelectConditionDatabaseWebSocket selectConditionDatabaseWebSocket() { return new SelectConditionDatabaseWebSocket(); }
 
+    @Bean
+    public ChangeRecordWebSocket changeRecordWebSocket() { return new ChangeRecordWebSocket(); }
+
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(dataBaseWebSocket(), "/db_action");
         registry.addHandler(selectConditionDatabaseWebSocket(), "/record");
+        registry.addHandler(changeRecordWebSocket(), "/change");
     }
 }

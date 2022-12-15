@@ -4,6 +4,9 @@ import access.domain.Contract;
 import org.springframework.stereotype.Component;
 
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 
 @Component
@@ -116,6 +119,27 @@ public class DatabaseRequestService {
         System.out.println("CONTRACT: " + contract);
 
         return contract;
+    }
+
+    public void updateContractRecord(String className, String id,
+                             String provider_id, String store_id, String date_contract) {
+        String sql = String.format("UPDATE %s SET id=?, provider_id=?, store_id=?, date_contract=? WHERE id = %s;",
+                className, id);
+
+        if (connection != null) {
+            try {
+                preparedStatement = connection.prepareStatement(sql);
+
+                preparedStatement.setInt(1, Integer.parseInt(id));
+                preparedStatement.setInt(2, Integer.parseInt(provider_id));
+                preparedStatement.setInt(3, Integer.parseInt(store_id));
+                preparedStatement.setDate(4, Date.valueOf(date_contract));
+
+                preparedStatement.executeUpdate();
+            } catch (SQLException exc) {
+                exc.printStackTrace();
+            }
+        }
     }
 
     public void addToContract(long id, long providerId, long storeId, Date date) {

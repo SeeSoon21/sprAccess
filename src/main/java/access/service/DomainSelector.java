@@ -1,6 +1,7 @@
 package access.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.javapoet.ClassName;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -36,7 +37,19 @@ public class DomainSelector {
      */
     public Object getRecordById(String className, String id) {
         switch (className) {
-            case "contract" -> {return databaseRequestService.selectContractRecord(id);}
+            case "contract", "department", "employee", "product", "provider", "store" -> {
+                return databaseRequestService.getSelectById(className, id);
+            }
+        }
+
+        return null;
+    }
+
+    public Object postUpdateById(String className, String id) {
+        switch (className) {
+            case "contract", "department", "employee", "product", "provider", "store" -> {
+                return databaseRequestService.getSelectById(className, id);
+            }
         }
 
         return null;
