@@ -8,7 +8,8 @@ import java.util.LinkedList;
 
 /**
  * Service-методы класса предназначены, чтобы возращать объекты, используемые при
- * работе с веб-сокетами
+ * работе с веб-сокетами.
+ * этот класс -- ещё один уровень абстракции -- лежит между сервисом базы данных и веб-сокетов.
  */
 @Service
 public class DomainSelector {
@@ -45,17 +46,35 @@ public class DomainSelector {
         return null;
     }
 
-    public Object postUpdateById(String className, String id) {
+    public void postUpdate(String[] fields) {
+        String className = fields[0];
+        String id = fields[1];
+
         switch (className) {
-            case "contract", "department", "employee", "product", "provider", "store" -> {
-                return databaseRequestService.getSelectById(className, id);
+            case "contract" -> {
+                String provider_id = fields[2];
+                String store_id = fields[3];
+                String date_contract = fields[4];
+                databaseRequestService.updateContractRecord(className, id, provider_id, store_id, date_contract);
             }
         }
-
-        return null;
     }
 
+    public void postInsert(String[] fields) {
+        String className = fields[0];
+        switch (className) {
+            case "contract" -> {
+                String provider_id = fields[1];
+                String store_id = fields[2];
+                String date_contract = fields[3];
+                databaseRequestService.insertContractRecord(className, provider_id, store_id, date_contract);
+            }
+        }
+    }
 
+    public void postDelete(String className, String id) {
+        databaseRequestService.deleteRecord(className, id);
+    }
 
     //создает полное имя класса по названию класса
     public static String getClassNameByString(String className) {

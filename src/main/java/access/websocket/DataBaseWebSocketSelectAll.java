@@ -1,6 +1,7 @@
 package access.websocket;
 
 import access.service.DomainSelector;
+import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -16,7 +17,7 @@ public class DataBaseWebSocketSelectAll extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 
         System.out.println("message: " + message.getPayload());
 

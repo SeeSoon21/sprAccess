@@ -1,11 +1,15 @@
-ws = new WebSocket("ws://localhost:8080/record")
+let ws = new WebSocket("ws://localhost:8080/record")
+let className;
+let id;
 
 ws.onopen = function() {
-    console.log("соединение установлено(get_record): " + window.location.href)
     //string[2] -- название класса
     let string = window.location.pathname.split('/');
-    let complete_string = string[2] + ":" + string[3];
-    console.log("complete_string: " + complete_string);
+
+    className = string[2];
+    id = string[3];
+
+    let complete_string = className + ":" + id;
 
     ws.send(complete_string);
 }
@@ -47,11 +51,59 @@ function parseJson(json) {
         fields_form.appendChild(field_container);
     }
 
+
+    deleteRecordBtn(className, id);
+    save_close_session();
+}
+
+function deleteRecordBtn(className, id) {
+    let ws_sock = new WebSocket("ws://localhost:8080/delete")
+
+    let deleteBtn;
+    let fields_form = document.getElementById("fields-form");
+
+    deleteBtn = document.createElement("input");
+    deleteBtn.type = "button";
+    deleteBtn.className = "btn btn-danger";
+    deleteBtn.id = "delete_btn";
+    deleteBtn.value = "Удалить";
+
+    fields_form.appendChild(deleteBtn);
+
+    document.getElementById(deleteBtn.id).onclick = function () {
+        //нужно сделать ещё один обработчик
+        let json = {
+            class_name: className,
+            id: id
+        }
+
+        ws_sock.send(JSON.stringify(json));
+        deleteAllChildElements("fields-form");
+    };
+
+}
+
+function deleteAllChildElements(id) {
+    const parentNode = document.getElementById(id);
+    parentNode.textContent = '';
+
+    let label = document.createElement("h2");
+    label.appendChild(document.createTextNode("Запись успешно удалена!"));
+    parentNode.appendChild(label);
+
+    let backBtn = document.getElementById("saveChangesBtn");
+    backBtn.value = "Вернуться";
+    backBtn.onclick = function () {
+        location.href = "http://localhost:8080/db";
+    }
+}
+
+
+function save_close_session() {
     document.getElementById("saveChangesBtn").onclick(function () {
         ws.close();
     });
 }
-
 
 
 

@@ -2,10 +2,7 @@ package access.websocket;
 
 import access.service.DomainSelector;
 import access.service.HelpRecordService;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import org.aspectj.weaver.bcel.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.TextMessage;
@@ -42,7 +39,7 @@ public class SelectConditionDatabaseWebSocket extends TextWebSocketHandler {
         String className = jsonArray[0];
         String id = jsonArray[1];
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
         String jsonIdObject = gson.toJson(selector.getRecordById(className, id));
 
         //отправляем объект, поля которого затем привяжутся к id на html-странице

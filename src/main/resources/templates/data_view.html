@@ -33,7 +33,7 @@
 
 <body>
 
-<div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+<div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" id="all_tables_data">
     <div class="btn-group mr-2" role="group" aria-label="First group">
         <button type="button" class="btn btn-secondary" id="contract"
                 value="contract" onclick="handle_button(this)">contract</button>
@@ -52,12 +52,15 @@
     </div>
     <div class="btn-group mr-2" role="group" aria-label="Fifth group">
         <button type="button" class="btn btn-secondary" id="department"
-                value="Отдел" onclick="handle_button(this)">Отдел</button>
+                value="department" onclick="handle_button(this)">department</button>
     </div>
     <div class="btn-group mr-2" role="group" aria-label="Sixth group">
         <button type="button" class="btn btn-secondary" id="employee"
                 value="employee" onclick="handle_button(this)">employee</button>
     </div>
+</div>
+<div id="new_record">
+    <a id="new_record_href" href="http://localhost:8080/new_record">Add new record</a>
 </div>
 <br />
 

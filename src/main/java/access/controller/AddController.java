@@ -1,36 +1,15 @@
 package access.controller;
 
-import access.service.HelpRecordService;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/record")
+@RequestMapping("new_record")
 public class AddController {
-    private ArrayList<?> list;
 
-    @GetMapping("/{className}/{id}")
-    public String getChangeableRecord(
-            @PathVariable("className") String className,
-            @PathVariable("id") String id
-    ) {
-        System.out.println("className" + className);
-        System.out.println("id" + id);
-        HelpRecordService.getStringFieldsOfClass(className);
-
-        //HelpRecordService.getStringFieldsOfClass(className)
-        return "get_record";
+    @GetMapping
+    public String getNewRecordPage() {
+        return "new_record";
     }
-
-    @PostMapping("/{className}/{id}")
-    public void toChangeRecord(
-            @PathVariable("className") String className,
-            @PathVariable("id") String id,
-            @RequestParam Object object) {
-        System.out.println("post object:" + object.toString());
-    }
-
-
 }

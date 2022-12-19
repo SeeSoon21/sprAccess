@@ -46,7 +46,7 @@ public class DatabaseRequestService {
             try {
                 statement = connection.createStatement();
                 set = statement.executeQuery(sql);
-                while(set.next()) {
+                while (set.next()) {
                     //если расположить создание объекта не в цикле -- в лист пойдет одна и та же ссылка на объект
                     contract = new Contract();
 
@@ -78,14 +78,17 @@ public class DatabaseRequestService {
 
     /**
      * определяем объект, выбранный для редактирования юзером
+     *
      * @param className -- класс(сущность)
-     * @param id -- номер записи
+     * @param id        -- номер записи
      * @return object -- экземпляр класса, собранный по строке из БД
      */
     public Object getSelectById(String className, String id) {
 
         switch (className) {
-            case "contract" -> { return selectContractRecord(id); }
+            case "contract" -> {
+                return selectContractRecord(id);
+            }
 
         }
 
@@ -105,7 +108,7 @@ public class DatabaseRequestService {
             try {
                 statement = connection.createStatement();
                 set = statement.executeQuery(sql);
-                while(set.next()) {
+                while (set.next()) {
                     contract.setId(set.getInt("id"));
                     contract.setProvider_id(set.getInt("provider_id"));
                     contract.setStore_id(set.getInt("store_id"));
@@ -121,13 +124,19 @@ public class DatabaseRequestService {
         return contract;
     }
 
+    /**
+     * Изменение записи в таблице contract по id-шнику
+     *
+     * @param className -- название таблицы
+     */
     public void updateContractRecord(String className, String id,
-                             String provider_id, String store_id, String date_contract) {
+                                     String provider_id, String store_id, String date_contract) {
         String sql = String.format("UPDATE %s SET id=?, provider_id=?, store_id=?, date_contract=? WHERE id = %s;",
                 className, id);
 
         if (connection != null) {
             try {
+                System.out.println("Connection is not null, запись готова к обновлению");
                 preparedStatement = connection.prepareStatement(sql);
 
                 preparedStatement.setInt(1, Integer.parseInt(id));
@@ -136,28 +145,43 @@ public class DatabaseRequestService {
                 preparedStatement.setDate(4, Date.valueOf(date_contract));
 
                 preparedStatement.executeUpdate();
+                System.out.println("Запись обновлена!");
             } catch (SQLException exc) {
                 exc.printStackTrace();
             }
         }
     }
 
-    public void addToContract(long id, long providerId, long storeId, Date date) {
+    public void addToContract(String id, String providerId, String storeId, String date_contract) {
         String sql = "INSERT INTO contract VALUES(?,?,?,?)";
         if (connection != null) {
             try {
+                System.out.println("Connection is not null, запись готова к обновлению");
                 preparedStatement = connection.prepareStatement(sql);
+
+                preparedStatement.setInt(1, Integer.parseInt(id));
+                preparedStatement.setInt(2, Integer.parseInt(providerId));
+                preparedStatement.setInt(3, Integer.parseInt(storeId));
+                preparedStatement.setDate(4, Date.valueOf(date_contract));
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
+    }
 
-        if (preparedStatement != null) {
+
+    public void insertContractRecord(String className, String providerId, String storeId, String dateContract) {
+        String sql = String.format("INSERT INTO %s(provider_id, store_id, date_contract) VALUES(?,?,?)", className);
+
+        if (connection != null) {
             try {
-                preparedStatement.setLong(1, id);
-                preparedStatement.setLong(2, providerId);
-                preparedStatement.setLong(3, storeId);
-                preparedStatement.setDate(4, date);
+                System.out.println("Connection is not null, запись готова к обновлению");
+                preparedStatement = connection.prepareStatement(sql);
+
+                preparedStatement.setInt(1, Integer.parseInt(providerId));
+                preparedStatement.setInt(2, Integer.parseInt(storeId));
+                preparedStatement.setDate(3, Date.valueOf(dateContract));
+
                 preparedStatement.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -165,5 +189,16 @@ public class DatabaseRequestService {
         }
     }
 
+    public void deleteRecord(String className, String id) {
+        String sql = String.format("delete from %s where id=%s", className, id);
+        if (connection != null) {
+            try {
+                preparedStatement = connection.prepareStatement(sql);
 
+                preparedStatement.executeUpdate();
+            } catch(SQLException exc) {
+                exc.printStackTrace();
+            }
+        }
+    }
 }
