@@ -10,9 +10,7 @@ ws.onmessage = function(json) {
     parse_inp_json(json);
 
     console.log("момент перед закрытием!");
-    document.getElementById("saveChangesBtn").onclick(function () {
-        //ws.close();
-    });
+    save_btn();
 }
 function parse_inp_json(fields_array_string) {
     let fields_array = fields_array_string.data.split(", ");
@@ -24,7 +22,6 @@ function parse_inp_json(fields_array_string) {
     let field_container;
     let label_field;
     let input_text;
-
 
     for (let i = 0; i < fields_array.length; i++) {
         console.log(fields_array[i]);
@@ -46,15 +43,25 @@ function parse_inp_json(fields_array_string) {
         fields_form.appendChild(field_container);
 
     }
-
-
 }
 
 function handle_current_table(btn) {
     table_name = btn.value;
-    console.log("btn_value: " + table_name);
-
     ws.send(table_name);
+
+}
+
+function save_btn() {
+    let div = document.createElement("div");
+    let save_btn = document.createElement("input");
+
+    save_btn.type = "button";
+    save_btn.className = "btn btn-primary ml-3";
+    save_btn.id = "saveChangesBtn";
+    save_btn.value = "Сохранить"
+
+    div.appendChild(save_btn);
+    document.getElementById("fields-form").appendChild(save_btn);
 }
 
 

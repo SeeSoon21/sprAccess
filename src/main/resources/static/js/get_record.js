@@ -17,6 +17,8 @@ ws.onopen = function() {
 ws.onmessage = function (ev) {
     console.log("data: " + ev.data);
     parseJson(ev.data);
+
+    save_btn();
 }
 
 function parseJson(json) {
@@ -51,9 +53,8 @@ function parseJson(json) {
         fields_form.appendChild(field_container);
     }
 
-
     deleteRecordBtn(className, id);
-    save_close_session();
+    //save_close_session();
 }
 
 function deleteRecordBtn(className, id) {
@@ -64,14 +65,13 @@ function deleteRecordBtn(className, id) {
 
     deleteBtn = document.createElement("input");
     deleteBtn.type = "button";
-    deleteBtn.className = "btn btn-danger";
+    deleteBtn.className = "btn btn-danger ml-3";
     deleteBtn.id = "delete_btn";
     deleteBtn.value = "Удалить";
 
     fields_form.appendChild(deleteBtn);
 
-    document.getElementById(deleteBtn.id).onclick = function () {
-        //нужно сделать ещё один обработчик
+    deleteBtn.addEventListener("click", function () {
         let json = {
             class_name: className,
             id: id
@@ -79,11 +79,13 @@ function deleteRecordBtn(className, id) {
 
         ws_sock.send(JSON.stringify(json));
         deleteAllChildElements("fields-form");
-    };
+    });
 
 }
 
+//удаление всех дочерних узлов(полей инпутов) и создание кнопки возращения
 function deleteAllChildElements(id) {
+    console.log("Удаление дочерних элементов");
     const parentNode = document.getElementById(id);
     parentNode.textContent = '';
 
@@ -91,13 +93,30 @@ function deleteAllChildElements(id) {
     label.appendChild(document.createTextNode("Запись успешно удалена!"));
     parentNode.appendChild(label);
 
-    let backBtn = document.getElementById("saveChangesBtn");
+    let backBtn = document.createElement("input");
+    backBtn.type = "button";
     backBtn.value = "Вернуться";
+    backBtn.className = "";
     backBtn.onclick = function () {
         location.href = "http://localhost:8080/db";
     }
+
+    parentNode.appendChild(backBtn);
 }
 
+//создание кнопки сохранения
+function save_btn() {
+    let div = document.createElement("div");
+    let save_btn = document.createElement("input");
+
+    save_btn.type = "button";
+    save_btn.className = "btn btn-primary ml-3";
+    save_btn.id = "saveChangesBtn";
+    save_btn.value = "Сохранить"
+
+    div.appendChild(save_btn);
+    document.getElementById("fields-form").appendChild(save_btn);
+}
 
 function save_close_session() {
     document.getElementById("saveChangesBtn").onclick(function () {

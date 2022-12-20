@@ -17,4 +17,42 @@ function save_new_record() {
     }
 
     ws_sock.send(str);
+    deleteAllChildElements("fields-form");
+}
+
+//удаляем все input-text поля и убираем кнопку сохранения при нажатии
+function deleteAllChildElements(id) {
+    let saveBtn = document.getElementById("saveChangesBtn");
+
+    //saveBtn.onclick = function () {
+    saveBtn.addEventListener("click", function () {
+        const parentNode = document.getElementById(id);
+        parentNode.textContent = '';
+
+        let label = document.createElement("h2");
+        label.appendChild(document.createTextNode("Запись успешно добавлена!"));
+        parentNode.appendChild(label);
+
+        this.parentNode.removeChild(saveBtn);
+
+        backButton();
+    });
+
+    //}
+}
+
+//создание кнопки возврата
+function backButton() {
+    let parentNode = document.getElementById("fields-form");
+    let backBtn = document.createElement("input");
+    backBtn.id = "backBtn";
+    backBtn.type = "button";
+    backBtn.value = "Вернуться";
+    parentNode.appendChild(backBtn);
+    backBtn.href = "http://localhost:8080/db";
+
+    backBtn.onclick = function () {
+        location.href = "http://localhost:8080/db";
+    }
+
 }

@@ -20,13 +20,15 @@ function formSubmitData() {
         str += record_array[key] + ':';
     }
 
-    if (validation_function()) {
+    //if (validation_function()) {
         ws_change.send(str);
-    }
+    //}
 
     //ws.close();
 }
 
+
+/*
 function validation_function(record_array) {
     let without_error = true;
 
@@ -64,4 +66,4 @@ function validation_function(record_array) {
     }
 
     return without_error;
-}
+}*/
