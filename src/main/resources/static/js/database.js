@@ -8,6 +8,7 @@ ws.onopen = function () {
 ws.onmessage = function (ev) {
     let message = ev.data;
     let jsonData = JSON.parse(message);
+    document.getElementById("card-table").textContent = "";
 
     createRecord(jsonData, btnClassName);
 }

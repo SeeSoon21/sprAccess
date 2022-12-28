@@ -9,12 +9,13 @@ public class Product {
     private long id;
     private long provider_id;
     private long department_id;
+    private long store_id;
     private float price;
     private long quantity;
     private long expiration_date;
     private Date delivery_date;
 
     public enum fieldLabel {
-        id, provider_id, department_id, price, quantity, expiration_date, delivery_date
+        id, provider_id, department_id, store_id, price, quantity, expiration_date, delivery_date
     }
 }

@@ -16,6 +16,7 @@ ws.onopen = function() {
 
 ws.onmessage = function (ev) {
     console.log("data: " + ev.data);
+    //document.getElementById("fields-form").textContent = "";
     parseJson(ev.data);
 
     save_btn();
@@ -53,7 +54,11 @@ function parseJson(json) {
         fields_form.appendChild(field_container);
     }
 
+    //делаем поле id неизменяемым, но видимым
+    document.getElementById("id").readOnly = true;
+
     deleteRecordBtn(className, id);
+    deleteByButton();
     //save_close_session();
 }
 
@@ -81,6 +86,56 @@ function deleteRecordBtn(className, id) {
         deleteAllChildElements("fields-form");
     });
 
+}
+function deleteByButton() {
+    let ws_del = new WebSocket("ws://localhost:8080/delete")
+    //ws_del.send();
+
+    //общий див, в который будем складывать все новые элементы
+    let deleteDiv = document.createElement("div");
+    //форма, в которую положим див
+    let fieldsForm = document.getElementById("fields-form");
+
+    //поле для удаления, которое должен ввести пользователь
+    let deleteFieldName = document.createElement("input");
+    deleteFieldName.type = "text";
+    deleteFieldName.className = "btn btn-primary ml-3";
+    deleteFieldName.id = "deleteByFieldName";
+    deleteFieldName.placeholder = "Введите название поля";
+    deleteFieldName.appendChild(document.createTextNode("Удалить запись по полю"))
+
+    //
+    let deleteFieldValue = document.createElement("input");
+    deleteFieldValue.type = "text";
+    deleteFieldValue.id = "deleteByFieldValue";
+    deleteFieldValue.placeholder = "Значение удаляемого поля"
+
+    let deleteByFieldButton = document.createElement("input");
+    deleteByFieldButton.type = "button";
+    deleteByFieldButton.id = "deleteByFieldButton";
+    deleteByFieldButton.value = "Удалить";
+
+    deleteDiv.appendChild(deleteFieldName);
+    deleteDiv.appendChild(deleteFieldValue);
+    deleteDiv.appendChild(deleteByFieldButton);
+
+    fieldsForm.appendChild(deleteDiv);
+
+    deleteByFieldButton.addEventListener("click", function () {
+        //тут нужно будет пройтись по всем полям, id которых содержат "deleteByField"
+        console.log("click");
+        let inputIdArray = document.querySelectorAll("input[type='text']");
+
+        let field_values = [];
+        for (let i=0; i < inputIdArray.length; i++) {
+            console.log(inputIdArray[i].value);
+            field_values[i] = inputIdArray[i].value;
+        }
+
+        let complete_string = className + ":" + field_values[0] + ":" + field_values[1];
+        ws_del.send(complete_string);
+
+    })
 }
 
 //удаление всех дочерних узлов(полей инпутов) и создание кнопки возращения

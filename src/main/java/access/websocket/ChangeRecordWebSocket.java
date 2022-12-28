@@ -21,6 +21,7 @@ public class ChangeRecordWebSocket extends TextWebSocketHandler {
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String inputMessage = message.getPayload();
         String[] fields = inputMessage.split(":");
+        System.out.println("Измененная запись: " + inputMessage);
 
         domainSelector.postUpdate(fields);
     }
