@@ -31,6 +31,8 @@ public class WebSocketConfig implements WebSocketConfigurer {
     @Bean
     DeleteRecordWebsocket deleteRecordWebsocket() { return new DeleteRecordWebsocket(); }
 
+    @Bean
+    SelectByButton selectByButton() { return new SelectByButton(); }
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
@@ -40,5 +42,6 @@ public class WebSocketConfig implements WebSocketConfigurer {
         registry.addHandler(newRecordWebsocket(), "/insert");
         registry.addHandler(saveNewRecordWebsocket(), "/save");
         registry.addHandler(deleteRecordWebsocket(), "/delete");
+        registry.addHandler(selectByButton(), "/select_by_button");
     }
 }

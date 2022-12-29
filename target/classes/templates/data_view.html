@@ -15,15 +15,16 @@
 
     <style>
         .card-table {
-            margin:0 15% 0 15%;
-            width:80%;
+            margin: 0 15% 0 15%;
+            width: 80%;
             display: flex;
         }
+
         .btn-toolbar {
             text-align: center;
             display: flex;
-            margin:0 10% 0 30%;
-            width:50%;
+            margin: 0 10% 0 30%;
+            width: 50%;
             left: 40%;
             padding-top: 25px;
         }
@@ -36,46 +37,59 @@
 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups" id="all_tables_data">
     <div class="btn-group mr-2" role="group" aria-label="First group">
         <button type="button" class="btn btn-secondary" id="contract"
-                value="contract" onclick="handle_button(this)">contract</button>
+                value="contract" onclick="handle_button(this)">contract
+        </button>
     </div>
     <div class="btn-group mr-2" role="group" aria-label="Second group">
         <button type="button" class="btn btn-secondary" id="product"
-                value="product" onclick="handle_button(this)">product</button>
+                value="product" onclick="handle_button(this)">product
+        </button>
     </div>
     <div class="btn-group mr-2" role="group" aria-label="Third group">
         <button type="button" class="btn btn-secondary" id="provider"
-                value="provider" onclick="handle_button(this)">provider</button>
+                value="provider" onclick="handle_button(this)">provider
+        </button>
     </div>
     <div class="btn-group mr-2" role="group" aria-label="Fourth group">
         <button type="button" class="btn btn-secondary" id="store"
-                value="store" onclick="handle_button(this)">store</button>
+                value="store" onclick="handle_button(this)">store
+        </button>
     </div>
     <div class="btn-group mr-2" role="group" aria-label="Fifth group">
         <button type="button" class="btn btn-secondary" id="department"
-                value="department" onclick="handle_button(this)">department</button>
+                value="department" onclick="handle_button(this)">department
+        </button>
     </div>
     <div class="btn-group mr-2" role="group" aria-label="Sixth group">
         <button type="button" class="btn btn-secondary" id="employee"
-                value="employee" onclick="handle_button(this)">employee</button>
+                value="employee" onclick="handle_button(this)">employee
+        </button>
     </div>
 </div>
+
+<!--Тут будет находиться панель, в которой можно выбрать число выводимых столбцов-->
+<div id="medium_panel"></div>
+
 <div id="new_record">
     <a id="new_record_href" href="http://localhost:8080/new_record">Add new record</a>
 </div>
-<br />
 
-<div class="card-table" id="card-table">
+<br/>
 
-
-</div>
-
+<div class="card-table" id="card-table"></div>
 
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
+        integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
+        crossorigin="anonymous"></script>
 
 </body>
 

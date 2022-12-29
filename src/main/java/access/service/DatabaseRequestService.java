@@ -1,13 +1,17 @@
 package access.service;
 
 import access.domain.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.internal.LinkedHashTreeMap;
 import org.springframework.stereotype.Component;
 
 import java.sql.*;
+import java.sql.Date;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.LinkedList;
+import java.util.*;
 
 @Component
 public class DatabaseRequestService {
@@ -422,6 +426,67 @@ public class DatabaseRequestService {
         return provider;
     }
 
+    /******************************************SELECT BY VALUES***********************************************/
+    public String selectByValues(ArrayList<String> values) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (var str : values) {
+            stringBuilder.append(str).append(", ");
+        }
+
+        //разбиваем строку на массив, чтобы вычленить оттуда имя класса и поля, которые нужно вывести
+        String[] arrayValues = stringBuilder.toString().split(", ");
+        String className = arrayValues[0];
+        System.out.println("className" + className);
+
+        //подготавливаем поля, которые будут в с
+        StringBuilder resultValues = new StringBuilder();
+        for (int i = 1; i < arrayValues.length; i++) {
+            resultValues.append(arrayValues[i]).append(", ");
+        }
+        System.out.println("result-str:" + resultValues);
+
+        String result = resultValues.substring(0, resultValues.length() - 2);
+        System.out.println("getted VALUES:" + result);
+
+        String sql = String.format("SELECT %s FROM %s;", result, className);
+        System.out.println("sql:" + sql);
+
+        ResultSet set;
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+
+
+        //лист, в котором будем хранить мэп, чтобы вывести сразу несколько записей
+        LinkedList<LinkedHashMap<String, String>> linkedList = new LinkedList<>();
+
+
+        if (connection != null) {
+            try {
+                statement = connection.createStatement();
+                set = statement.executeQuery(sql);
+                while (set.next()) {
+                    for (int i = 1; i < arrayValues.length; i++) {
+                        LinkedHashMap<String, String> mapValues = new LinkedHashMap<>();
+                        System.out.println("arrayValues[i]:" + arrayValues[i]);
+                        mapValues.put(arrayValues[i], String.valueOf(set.getString(arrayValues[i])));
+                        linkedList.add(mapValues);
+                    }
+                }
+
+            } catch (SQLException exc) {
+                exc.printStackTrace();
+            }
+        }
+
+        /*for (var key: mapValues.keySet()) {
+            System.out.println("key:" + key + ", value:" + mapValues.get(key));
+        }*/
+        String json = gson.toJson(linkedList);
+        System.out.println("json:" + json);
+
+        return json;
+    }
+
+
     /****************************************** UPDATE ******************************************************
      /**
      * Изменение записи в таблице contract по id-шнику
@@ -718,16 +783,18 @@ public class DatabaseRequestService {
         }
     }
 
-    public void deleteRecord(String className, String id) {
-        String sql = String.format("delete from %s where id=%s", className, id);
+    public void deleteRecord(String className, String fieldName, String fieldValue) {
+        String sql = String.format("delete from %s where %s=%s", className, fieldName, fieldValue);
         if (connection != null) {
             try {
                 preparedStatement = connection.prepareStatement(sql);
-
                 preparedStatement.executeUpdate();
+
+                System.out.println("Запись успешно удалена!");
             } catch (SQLException exc) {
                 exc.printStackTrace();
             }
         }
     }
+
 }

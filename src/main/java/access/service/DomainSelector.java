@@ -1,9 +1,11 @@
 package access.service;
 
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.javapoet.ClassName;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -121,6 +123,10 @@ public class DomainSelector {
         }
     }
 
+    public String postSelectByValues(ArrayList<String> arrayList) {
+        return databaseRequestService.selectByValues(arrayList);
+    }
+
     public void postInsert(String[] fields) {
         String className = fields[0];
         switch (className) {
@@ -180,8 +186,8 @@ public class DomainSelector {
         }
     }
 
-    public void postDelete(String className, String id) {
-        databaseRequestService.deleteRecord(className, id);
+    public void postDelete(String className, String fieldName, String fieldValue) {
+        databaseRequestService.deleteRecord(className, fieldName, fieldValue);
     }
 
     //создает полное имя класса по названию класса

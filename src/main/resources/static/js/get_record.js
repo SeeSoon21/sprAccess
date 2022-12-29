@@ -132,9 +132,14 @@ function deleteByButton() {
             field_values[i] = inputIdArray[i].value;
         }
 
-        let complete_string = className + ":" + field_values[0] + ":" + field_values[1];
-        ws_del.send(complete_string);
+        let json = {
+            className: className,
+            fieldsName: field_values[0],
+            fieldValue: field_values[1]
+        }
 
+        ws_del.send(JSON.stringify(json));
+        deleteAllChildElements("fields-form");
     })
 }
 
