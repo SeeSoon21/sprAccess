@@ -3,15 +3,14 @@ package access.service;
 import access.domain.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.internal.LinkedHashTreeMap;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
 import java.sql.*;
 import java.sql.Date;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static access.service.HelpRecordService.convertEnumFieldToStringArrayList;
 
 @Component
 public class DatabaseRequestService {
@@ -487,6 +486,50 @@ public class DatabaseRequestService {
     }
 
 
+    /**
+     * По клиентскому запросу выдаёт данные из БД
+     *
+     * @param values - значения, пришедшие с клиентской стороны(класс + запрос)
+     */
+    public String selectByParameter(ArrayList<String> values) {
+        String className = values.get(0);
+        String userQuery = values.get(1);
+        String answerJson = null;
+
+        //classname & values from bd
+        ArrayList<HashMap<String, String>> commonList = new ArrayList<>();
+
+        String sql = String.format("SELECT * from %s where %s;", className, userQuery);
+        ArrayList<String> arrayList = convertEnumFieldToStringArrayList(className);
+
+        if (connection != null) {
+            try {
+                statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(sql);
+
+                //перебираем каждый объект resultSet из запроса
+                //после чего присваиваем добавляем в мапу два значение: имя поля & val из бд
+                while (resultSet.next()) {
+                    for (var val : arrayList) {
+                        HashMap<String, String> valuesFromBD = new HashMap<>();
+                        valuesFromBD.put(val, resultSet.getString(val));
+
+                        commonList.add(valuesFromBD);
+                    }
+                }
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-mm-dd").create();
+                answerJson = gson.toJson(commonList);
+                System.out.println("полученные с БД значения: " + answerJson);
+
+            } catch (SQLException exception) {
+                exception.printStackTrace();
+            }
+        }
+
+
+        return answerJson;
+    }
+
     /****************************************** UPDATE ******************************************************
      /**
      * Изменение записи в таблице contract по id-шнику
@@ -796,5 +839,6 @@ public class DatabaseRequestService {
             }
         }
     }
+
 
 }

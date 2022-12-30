@@ -34,6 +34,9 @@ public class WebSocketConfig implements WebSocketConfigurer {
     @Bean
     SelectByButton selectByButton() { return new SelectByButton(); }
 
+    @Bean
+    QueryByUserWebSocket queryByUserWebSocket() { return new QueryByUserWebSocket(); }
+
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(dataBaseWebSocket(), "/db_action");
@@ -43,5 +46,6 @@ public class WebSocketConfig implements WebSocketConfigurer {
         registry.addHandler(saveNewRecordWebsocket(), "/save");
         registry.addHandler(deleteRecordWebsocket(), "/delete");
         registry.addHandler(selectByButton(), "/select_by_button");
+        registry.addHandler(queryByUserWebSocket(), "/user_query");
     }
 }

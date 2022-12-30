@@ -15,6 +15,7 @@ ws.onmessage = function (ev) {
 
     createRecord(jsonData, btnClassName);
     selectManagerButtons(jsonData);
+    requestWindow();
 }
 
 //каждый запись добавляется в соответсвующий список
@@ -35,7 +36,6 @@ function createRecord(jsonData, className) {
         a_href.textContent = "Edit";
         local_card.className = "card text-white bg-dark mb-3";
         body_card.className = "card-body";
-
 
         for (let key in jsonData[i]) {
             console.log(key + ":" + jsonData[i][key]);
@@ -74,6 +74,7 @@ function handle_button(btn) {
  */
 let ws_select_by_button = new WebSocket("ws://localhost:8080/select_by_button");
 
+
 function selectManagerButtons(jsonData) {
 
     //получаем форму, к которой будем "приклеивать" кнопки(прикрепляем к навбару, по сути)
@@ -90,29 +91,7 @@ function selectManagerButtons(jsonData) {
     paragraph.appendChild(document.createTextNode("Вывести только: "));
     commonDiv.appendChild(paragraph);
 
-    //упаковываем данные
-    let checkboxJson = {};
-
-    let checkboxSubmit = document.createElement("input");
-    checkboxSubmit.type = "button";
-    checkboxSubmit.id = "checkboxSubmit";
-    checkboxSubmit.value = "Показать";
-    checkboxSubmit.addEventListener("click", function () {
-        document.getElementById("card-table").textContent = "";
-        console.log("event");
-        let resultSet = document.querySelectorAll("input[type='checkbox']");
-
-        checkboxJson["className"] = btnClassName;
-        for (let i = 0; i < resultSet.length; i++) {
-            if (resultSet[i].checked) {
-                let element = resultSet[i].parentElement.textContent.trim();
-                console.log("checkbox: " + element);
-                checkboxJson[resultSet[i].id] = element;
-            }
-        }
-
-        ws_select_by_button.send(JSON.stringify(checkboxJson));
-    });
+    checkboxSubmitEvent();
 
     //получим строку, содержащую все имеющиеся имена полей
     let fieldNameString = jsonData[0];
@@ -136,7 +115,7 @@ function selectManagerButtons(jsonData) {
         checkBoxDiv.appendChild(checkbox);
 
         commonDiv.appendChild(checkBoxDiv);
-        commonDiv.appendChild(checkboxSubmit);
+        //commonDiv.appendChild(checkboxSubmit);
     }
 
     all_tables_data_div_child.appendChild(commonDiv);
@@ -145,6 +124,36 @@ function selectManagerButtons(jsonData) {
 
 
 }
+
+//по нажатию на клавишу "отправить", формирует столбцы, соответсвующие запросу
+function checkboxSubmitEvent() {
+    //упаковываем данные
+    let checkboxJson = {};
+
+    let commonDiv = document.getElementById("checkboxButtons");
+
+    let checkboxSubmit = document.createElement("input");
+    checkboxSubmit.type = "button";
+    checkboxSubmit.id = "checkboxSubmit";
+    checkboxSubmit.value = "Показать";
+    checkboxSubmit.addEventListener("click", function () {
+        document.getElementById("card-table").textContent = "";
+        console.log("event");
+        let resultSet = document.querySelectorAll("input[type='checkbox']");
+
+        checkboxJson["className"] = btnClassName;
+        for (let i = 0; i < resultSet.length; i++) {
+            if (resultSet[i].checked) {
+                let element = resultSet[i].parentElement.textContent.trim();
+                console.log("checkbox: " + element);
+                checkboxJson[resultSet[i].id] = element;
+            }
+        }
+        commonDiv.appendChild(checkboxSubmit);
+        ws_select_by_button.send(JSON.stringify(checkboxJson));
+    });
+}
+
 
 ws_select_by_button.onmessage = function answerByServerSelectByValues(ev) {
     let data = ev.data;
@@ -181,33 +190,96 @@ ws_select_by_button.onmessage = function answerByServerSelectByValues(ev) {
 
         }
 
-
         //local_card.appendChild(document.createTextNode("<br /><br />"))
         local_card.appendChild(body_card);
         card_table.appendChild(local_card);
-
     }
 }
 
+/**
+ * Функция, являющая окно ввода для запросов пользователей
+ */
 function requestWindow() {
     let card_table = document.getElementById("card-table");
     let commonDiv = document.createElement("div");
-    commonDiv.class = "form-inline";
 
     let divExample = document.createElement("div");
-    divExample.className = "form-group mb-2";
-    let labelExample = document.createElement("");
+    let labelExample = document.createElement("label");
+    let inputExample = document.createElement("input");
 
     let inputDiv = document.createElement("div");
+    let inputLabelDiv = document.createElement("label");
+    let inputDivWindow = document.createElement("input");
+
+    let button = document.createElement("input");
+
+    commonDiv.className = "form-inline";
+
+    divExample.className = "form-group mb-2";
+    labelExample.className = "sr-only";
+    inputExample.className = "form-control-plaintext";
+    inputExample.type = "text";
+
+    divExample.appendChild(labelExample);
+    divExample.appendChild(inputExample);
+
     inputDiv.class = "form-group mx-sm-3 mb-2";
+    inputDiv.id = "inputDiv";
+    inputLabelDiv.htmlFor = "inputDiv";
+    inputLabelDiv.className = "form-control";
+    inputLabelDiv.appendChild(document.createTextNode("\"id > 30\""));
+    inputDivWindow.className = "form-control";
+    inputDivWindow.type = "text";
+    inputDivWindow.id = "input_window"
 
+    inputDiv.appendChild(inputLabelDiv);
+    inputDiv.appendChild(inputDivWindow);
 
+    button.className = "btn btn-primary mb-2";
+    button.type = "input";
+    button.value = "Найти";
+    button.id = "queryButton";
 
+    commonDiv.appendChild(divExample);
+    commonDiv.appendChild(inputDiv);
+    commonDiv.appendChild(button);
 
-    let inputWindow = document.createElement("input");
-    inputWindow.id = "inputWindow";
-    inputWindow.className = "";
+    card_table.appendChild(commonDiv);
+    queryButtonClick();
 }
+
+let ws_query = new WebSocket("ws://localhost:8080/user_query");
+function queryButtonClick() {
+    document.getElementById("queryButton").addEventListener("click", function () {
+        let queryInput = document.getElementById("input_window").value;
+        let json = {
+            "className" : btnClassName,
+            "userQuery" : queryInput
+        };
+        console.log("inputQ_json: " + json);
+        if (queryInput != null) {
+            ws_query.send(JSON.stringify(json));
+        }
+
+        document.getElementById("input_window").value = "";
+    });
+}
+
+ws_query.onmessage = function(ev) {
+    let message = ev.data;
+    let jsonData = JSON.parse(message);
+    //document.getElementById("all_tables_data_div_child").textContent = "";
+    document.getElementById("card-table").textContent = "";
+    console.log("check");
+    document.getElementById("medium_panel").textContent = "";
+
+    createRecord(jsonData, btnClassName);
+    selectManagerButtons(jsonData);
+    requestWindow();
+}
+
+
+
 
 
 

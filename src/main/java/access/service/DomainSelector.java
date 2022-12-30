@@ -1,8 +1,6 @@
 package access.service;
 
-import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.javapoet.ClassName;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -126,6 +124,12 @@ public class DomainSelector {
     public String postSelectByValues(ArrayList<String> arrayList) {
         return databaseRequestService.selectByValues(arrayList);
     }
+
+    public String selectByParameter(ArrayList<String> values) {
+        return databaseRequestService.selectByParameter(values);
+    }
+
+
 
     public void postInsert(String[] fields) {
         String className = fields[0];
