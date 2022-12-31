@@ -18,7 +18,7 @@ public class Contract {
     public void setData(String id, String provider_id, String store_id, String date_contract) {
         this.id = Integer.parseInt(id);
         this.provider_id = Integer.parseInt(provider_id);
-        this.provider_id = Integer.parseInt(store_id);
-        this.provider_id = Integer.parseInt(date_contract);
+        this.store_id = Integer.parseInt(store_id);
+        this.date_contract = Date.valueOf(date_contract);
     }
 }

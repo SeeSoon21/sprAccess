@@ -27,7 +27,7 @@ public class QueryByUserWebSocket extends TextWebSocketHandler {
         String json = message.getPayload();
         System.out.println("message query:" + message.getPayload());
 
-        Map map = new GsonBuilder().setDateFormat("yyyy-mm-dd").create().fromJson(json, HashMap.class);
+        Map map = new GsonBuilder().setDateFormat("yyyy-MM-dd").create().fromJson(json, HashMap.class);
         ArrayList<String> values = new ArrayList<>();
         for (var key: map.keySet()) {
             values.add(map.get(key).toString());

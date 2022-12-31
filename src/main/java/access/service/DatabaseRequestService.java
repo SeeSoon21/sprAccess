@@ -497,10 +497,15 @@ public class DatabaseRequestService {
         String answerJson = null;
 
         //classname & values from bd
-        ArrayList<HashMap<String, String>> commonList = new ArrayList<>();
+        //ArrayList<HashMap<String, String>> commonList = new ArrayList<>();
+        //object from dynamically-define class
+        ArrayList<Object> objectList = new ArrayList<>();
 
         String sql = String.format("SELECT * from %s where %s;", className, userQuery);
         ArrayList<String> arrayList = convertEnumFieldToStringArrayList(className);
+
+        //объект, гибко принимающий в себя значения полей из БД
+        Object mainObject = null;
 
         if (connection != null) {
             try {
@@ -510,22 +515,24 @@ public class DatabaseRequestService {
                 //перебираем каждый объект resultSet из запроса
                 //после чего присваиваем добавляем в мапу два значение: имя поля & val из бд
                 while (resultSet.next()) {
+                    ArrayList<String> tempValuesFromDB = new ArrayList<>();
                     for (var val : arrayList) {
-                        HashMap<String, String> valuesFromBD = new HashMap<>();
+                        /*HashMap<String, String> valuesFromBD = new HashMap<>();
                         valuesFromBD.put(val, resultSet.getString(val));
-
-                        commonList.add(valuesFromBD);
+                        commonList.add(valuesFromBD);*/
+                        tempValuesFromDB.add(resultSet.getString(val));
                     }
+                    mainObject = HelpRecordService.getObjectByClassname(className, tempValuesFromDB);
+                    objectList.add(mainObject);
                 }
-                Gson gson = new GsonBuilder().setDateFormat("yyyy-mm-dd").create();
-                answerJson = gson.toJson(commonList);
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+                answerJson = gson.toJson(objectList);
                 System.out.println("полученные с БД значения: " + answerJson);
 
             } catch (SQLException exception) {
                 exception.printStackTrace();
             }
         }
-
 
         return answerJson;
     }

@@ -32,11 +32,11 @@ function createRecord(jsonData, className) {
         a_href = document.createElement("a");
 
         a_href.setAttribute("id", "edit");
+        a_href.className = "btn btn-primary"
 
         a_href.textContent = "Edit";
         local_card.className = "card text-white bg-dark mb-3";
         body_card.className = "card-body";
-
 
         for (let key in jsonData[i]) {
             console.log(key + ":" + jsonData[i][key]);
@@ -214,9 +214,9 @@ function requestWindow() {
 
     let button = document.createElement("input");
 
-    commonDiv.className = "form-inline";
+    commonDiv.className = "form-group m-3";
 
-    divExample.className = "form-group mb-2";
+    divExample.className = "form-group";
     labelExample.className = "sr-only";
     inputExample.className = "form-control-plaintext";
     inputExample.type = "text";
@@ -224,7 +224,7 @@ function requestWindow() {
     divExample.appendChild(labelExample);
     divExample.appendChild(inputExample);
 
-    inputDiv.class = "form-group mx-sm-3 mb-2";
+    inputDiv.class = "form-group";
     inputDiv.id = "inputDiv";
     inputLabelDiv.htmlFor = "inputDiv";
     inputLabelDiv.className = "form-control";
@@ -236,7 +236,7 @@ function requestWindow() {
     inputDiv.appendChild(inputLabelDiv);
     inputDiv.appendChild(inputDivWindow);
 
-    button.className = "btn btn-primary mb-2";
+    button.className = "btn btn-primary m-3";
     button.type = "input";
     button.value = "Найти";
     button.id = "queryButton";
@@ -271,7 +271,6 @@ ws_query.onmessage = function(ev) {
     let jsonData = JSON.parse(message);
     //document.getElementById("all_tables_data_div_child").textContent = "";
     document.getElementById("card-table").textContent = "";
-    console.log("check");
     document.getElementById("medium_panel").textContent = "";
 
     createRecord(jsonData, btnClassName);
